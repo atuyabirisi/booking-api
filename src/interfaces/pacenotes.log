@@ -1,0 +1,18 @@
+interfaces/ is a Clean Architecture concept. 
+It contains interfaces/contracts that describe what
+the application needs from the outside world, without specifying how it is implemented.
+
+It can also be called the "ports" layer, as it defines the entry points for the application to interact with external systems or services. This layer allows for flexibility and decoupling, enabling the application to work with different implementations of these interfaces without changing the core business logic.
+Think of a port as a connection point between your application and something external.
+
+Then the infrastracture provides the adapters that implement these interfaces.
+
+                    application/interfaces/Logger.js
+                            ▲
+                            │
+                            │ implements
+                            │
+                    infrastructure/logging/WinstonLogger.js
+                            │
+                            ▼
+                        Winston
