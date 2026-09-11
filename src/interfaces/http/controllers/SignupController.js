@@ -1,4 +1,4 @@
-class AuthController {
+class SignupController {
   constructor(signupUser, logger) {
     this.signupUser = signupUser;
     this.logger = logger;
@@ -23,4 +23,4 @@ class AuthController {
   }
 }
 
-export default AuthController;
+export default SignupController;

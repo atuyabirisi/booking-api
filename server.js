@@ -1,8 +1,8 @@
 import "dotenv/config";
+import mongoose from "mongoose";
 import app from "./src/app.js";
 import connectDatabase from "./src/infrastructure/db/connectDB.js";
-import WinstonLogger from "./src/infrastructure/logging/winstonLogger.js";
-import mongoose from "mongoose";
+import WinstonLogger from "./src/infrastructure/services/WinstonLogger.js";
 
 const logger = new WinstonLogger();
 

@@ -1,4 +1,4 @@
-class PasswordHasher {
+class IPasswordService {
   async hash(password) {
     throw new Error("Method not implemented");
   }
@@ -8,4 +8,4 @@ class PasswordHasher {
   }
 }
 
-export default PasswordHasher;
+export default IPasswordService;

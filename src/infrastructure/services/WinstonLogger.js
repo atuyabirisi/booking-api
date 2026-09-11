@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import winston from "winston";
-import Logger from "../../application/logging/Logger.js";
+import Logger from "../../application/interfaces/ILogger.js";
 
 class WinstonLogger extends Logger {
   constructor() {

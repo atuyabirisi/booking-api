@@ -1,10 +1,10 @@
 import { jest } from "@jest/globals";
-import AuthController from "../../../../src/interfaces/http/controllers/AuthController.js";
+import SignupController from "../../../../src/interfaces/http/controllers/SignupController.js";
 
-describe("AuthController", () => {
+describe("SignupController", () => {
   let signupUser;
   let logger;
-  let authController;
+  let signupController;
   let req;
   let res;
 
@@ -17,7 +17,7 @@ describe("AuthController", () => {
       error: jest.fn(),
     };
 
-    authController = new AuthController(signupUser, logger);
+    signupController = new SignupController(signupUser, logger);
 
     req = {
       body: {
@@ -45,7 +45,7 @@ describe("AuthController", () => {
 
     signupUser.execute.mockResolvedValue(user);
 
-    await authController.signup(req, res);
+    await signupController.signup(req, res);
 
     expect(signupUser.execute).toHaveBeenCalledWith(req.body);
 
@@ -62,7 +62,7 @@ describe("AuthController", () => {
 
     signupUser.execute.mockRejectedValue(error);
 
-    await authController.signup(req, res);
+    await signupController.signup(req, res);
 
     expect(logger.error).toHaveBeenCalledWith(`Signup failed: ${error.stack}`);
 

@@ -1,9 +1,9 @@
 class UserRepository {
-  async findByEmail(email) {
+  async findUserByEmail(email) {
     throw new Error("Method not implemented");
   }
 
-  async save(user) {
+  async saveUser(user) {
     throw new Error("Method not implemented");
   }
 }

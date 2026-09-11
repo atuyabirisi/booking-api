@@ -3,17 +3,22 @@ import UserModel from "../models/UserModel.js";
 import User from "../../../domain/entities/User.js";
 
 class MongoUserRepository extends UserRepository {
-  async findByEmail(email) {
+  async findUserByEmail(email) {
     const user = await UserModel.findOne({ email });
 
     if (!user) return null;
 
     return new User({
       id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      password: user.password,
+      role: user.role,
     });
   }
 
-  async save(user) {
+  async saveUser(user) {
     const createdUser = await UserModel.create({
       name: user.name,
       email: user.email,

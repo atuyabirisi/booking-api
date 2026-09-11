@@ -1,8 +1,12 @@
 import express from "express";
-import { authController } from "../../../infrastructure/wiring-container/container.js";
+import {
+  signupController,
+  signinController,
+} from "../../../infrastructure/bootstrap/container.js";
 
 const router = express.Router();
 
-router.post("/signup", authController.signup.bind(authController));
+router.post("/signup", signupController.signup.bind(signupController));
+router.post("/signin", signinController.signin.bind(signinController));
 
 export default router;
