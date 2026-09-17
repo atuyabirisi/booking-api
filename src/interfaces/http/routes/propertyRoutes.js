@@ -7,7 +7,6 @@ const router = express.Router();
 router.post(
   "/create",
   upload.array("images", 8),
-
   createPropertyController.createProperty.bind(createPropertyController),
 );
 

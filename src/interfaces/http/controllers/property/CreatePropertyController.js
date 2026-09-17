@@ -6,8 +6,23 @@ class CreatePropertyController {
 
   async createProperty(req, res) {
     try {
+      const propertyData = {
+        ...req.body,
+
+        pricePerNight: Number(req.body.pricePerNight),
+        bedrooms: Number(req.body.bedrooms),
+        bathrooms: Number(req.body.bathrooms),
+        maxGuests: Number(req.body.maxGuests),
+
+        amenities: Array.isArray(req.body.amenities)
+          ? req.body.amenities
+          : req.body.amenities
+            ? [req.body.amenities]
+            : [],
+      };
+
       const property = await this.createPropertyUseCase.execute(
-        req.body,
+        propertyData,
         req.files,
       );
 
@@ -16,6 +31,8 @@ class CreatePropertyController {
         data: property,
       });
     } catch (error) {
+      console.error("CREATE PROPERTY ERROR:", error);
+
       this.logger.error(`CreateProperty failed: ${error.stack}`);
 
       return res.status(400).json({
