@@ -10,6 +10,10 @@ class PropertyRepository {
   async updateProperty(propertyNumber, dataToUpdate) {
     throw new Error("updateProperty() must be implemented");
   }
+
+  async deleteProperty(propertyNumber) {
+    throw new Error("deleteProperty() must be implemented");
+  }
 }
 
 export default PropertyRepository;

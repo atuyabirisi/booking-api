@@ -37,6 +37,12 @@ class MongoPropertyRepository extends PropertyRepository {
       },
     );
   }
+
+  async deleteProperty(propertyNumber) {
+    return PropertyModel.findOneAndDelete({
+      propertyNumber,
+    });
+  }
 }
 
 export default MongoPropertyRepository;

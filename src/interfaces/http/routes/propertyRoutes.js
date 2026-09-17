@@ -3,6 +3,7 @@ import {
   createPropertyController,
   updatePropertyController,
   getPropertyController,
+  deletePropertyController,
 } from "../../../infrastructure/bootstrap/container.js";
 import upload from "../middleware/uploadMiddleware.js";
 
@@ -23,6 +24,11 @@ router.patch(
   "/:propertyNumber",
   upload.array("images", 8),
   updatePropertyController.updateProperty.bind(updatePropertyController),
+);
+
+router.delete(
+  "/:propertyNumber",
+  deletePropertyController.deleteProperty.bind(deletePropertyController),
 );
 
 export default router;
