@@ -1,10 +1,12 @@
 import SignupUser from "../../application/use-cases/SignupUser.js";
 import SiginInUser from "../../application/use-cases/SignInUser.js";
 import CreatePropertyUsecase from "../../application/use-cases/property/CreatePropertyUseCase.js";
+import UpdatePropertyUseCase from "../../application/use-cases/property/UpdatePropertyUseCase.js";
 import MongoUserRepository from "../db/repositories/MongoUserRepository.js";
 import SignupController from "../../interfaces/http/controllers/SignupController.js";
 import SigninController from "../../interfaces/http/controllers/SigninController.js";
 import CreatePropertyController from "../../interfaces/http/controllers/property/CreatePropertyController.js";
+import UpdatePropertyController from "../../interfaces/http/controllers/property/UpdatePropertyController.js";
 import JwtService from "../services/JwtService.js";
 import BcryptPasswordService from "../services/BcryptPasswordService.js";
 import WinstonLogger from "../services/WinstonLogger.js";
@@ -33,6 +35,10 @@ const createProperty = new CreatePropertyUsecase(
   propertyRepository,
   imageStorage,
 );
+const updateExistingProperty = new UpdatePropertyUseCase(
+  propertyRepository,
+  imageStorage,
+);
 
 const signupController = new SignupController(signupUser, logger);
 const signinController = new SigninController(signinUser, logger);
@@ -40,5 +46,14 @@ const createPropertyController = new CreatePropertyController(
   createProperty,
   logger,
 );
+const updatePropertyController = new UpdatePropertyController(
+  updateExistingProperty,
+  logger,
+);
 
-export { signupController, signinController, createPropertyController };
+export {
+  signupController,
+  signinController,
+  createPropertyController,
+  updatePropertyController,
+};

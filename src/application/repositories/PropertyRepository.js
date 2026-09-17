@@ -6,6 +6,10 @@ class PropertyRepository {
   async findByPropertyNumber(propertyNumber) {
     throw new Error("findByPropertyNumber() must be implemented");
   }
+
+  async updateProperty(propertyNumber, dataToUpdate) {
+    throw new Error("updateProperty() must be implemented");
+  }
 }
 
 export default PropertyRepository;

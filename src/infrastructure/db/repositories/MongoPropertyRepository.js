@@ -3,7 +3,7 @@ import PropertyModel from "../models/PropertyModel.js";
 
 class MongoPropertyRepository extends PropertyRepository {
   async saveProperty(property) {
-    const propertyDocument = await PropertyModel.create({
+    return PropertyModel.create({
       propertyNumber: property.propertyNumber,
       title: property.title,
       description: property.description,
@@ -19,14 +19,23 @@ class MongoPropertyRepository extends PropertyRepository {
       createdAt: property.createdAt,
       updatedAt: property.updatedAt,
     });
-
-    return propertyDocument;
   }
 
   async findByPropertyNumber(propertyNumber) {
-    return await PropertyModel.findOne({
+    return PropertyModel.findOne({
       propertyNumber,
     });
+  }
+
+  async updateProperty(propertyNumber, dataToUpdate) {
+    return PropertyModel.findOneAndUpdate(
+      { propertyNumber },
+      { $set: dataToUpdate },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
   }
 }
 
