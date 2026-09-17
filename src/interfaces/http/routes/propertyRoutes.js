@@ -2,6 +2,7 @@ import express from "express";
 import {
   createPropertyController,
   updatePropertyController,
+  getPropertyController,
 } from "../../../infrastructure/bootstrap/container.js";
 import upload from "../middleware/uploadMiddleware.js";
 
@@ -11,6 +12,11 @@ router.post(
   "/create",
   upload.array("images", 8),
   createPropertyController.createProperty.bind(createPropertyController),
+);
+
+router.get(
+  "/:propertyNumber",
+  getPropertyController.getProperty.bind(getPropertyController),
 );
 
 router.patch(
