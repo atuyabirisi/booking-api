@@ -31,8 +31,6 @@ class CreatePropertyController {
         data: property,
       });
     } catch (error) {
-      console.error("CREATE PROPERTY ERROR:", error);
-
       this.logger.error(`CreateProperty failed: ${error.stack}`);
 
       return res.status(400).json({
