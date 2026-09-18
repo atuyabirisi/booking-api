@@ -1,10 +1,8 @@
 import { jest } from "@jest/globals";
-import SignupUser from "../../../src/application/use-cases/SignupUser.js";
+import SignupUser from "../../../../src/application/use-cases/SignupUser.js";
 
 describe("SignupUser", () => {
-  let userRepository;
-  let passwordService;
-  let signupUser;
+  let userRepository, passwordService, signupUser;
 
   beforeEach(() => {
     userRepository = {
