@@ -14,6 +14,10 @@ class PropertyRepository {
   async deleteProperty(propertyNumber) {
     throw new Error("deleteProperty() must be implemented");
   }
+
+  async isAvailable(propertyNumber) {
+    throw new Error("isAvailable() must be implemented");
+  }
 }
 
 export default PropertyRepository;

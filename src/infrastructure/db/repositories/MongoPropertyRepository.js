@@ -43,6 +43,16 @@ class MongoPropertyRepository extends PropertyRepository {
       propertyNumber,
     });
   }
+
+  async isAvailable(propertyNumber) {
+    const property = await PropertyModel.findOne({
+      propertyNumber,
+    });
+
+    if (!property) return false;
+
+    return property.status === "available";
+  }
 }
 
 export default MongoPropertyRepository;

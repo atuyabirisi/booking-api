@@ -11,11 +11,16 @@ import CreatePropertyController from "../../interfaces/http/controllers/property
 import UpdatePropertyController from "../../interfaces/http/controllers/property/UpdatePropertyController.js";
 import GetPropertyController from "../../interfaces/http/controllers/property/GetPropertyController.js";
 import DeletePropertyController from "../../interfaces/http/controllers/property/DeletePropertyController.js";
+import InitiateBookingPaymentController from "../../interfaces/http/controllers/booking/InitiateBookingPaymentController.js";
 import JwtService from "../services/JwtService.js";
 import BcryptPasswordService from "../services/BcryptPasswordService.js";
 import WinstonLogger from "../services/WinstonLogger.js";
 import CloudinaryImageStorage from "../services/CloudinaryStorageService.js";
 import MongoPropertyRepository from "../db/repositories/MongoPropertyRepository.js";
+import MongoPaymentRepository from "../db/repositories/MongoPaymentRepository.js";
+import MongoBookingRepository from "../db/repositories/MongoBookingRepository.js";
+import MpesaPaymentGateway from "../payments/MpesaPaymentGateway.js";
+import InitiateBookingPaymentUseCase from "../../application/use-cases/booking/InitiateBookingPaymentUseCase.js";
 
 const logger = new WinstonLogger();
 const passwordService = new BcryptPasswordService();
@@ -28,6 +33,16 @@ const tokenGenerator = new JwtService(
 
 const userRepository = new MongoUserRepository();
 const propertyRepository = new MongoPropertyRepository();
+const paymentRepository = new MongoPaymentRepository();
+const bookingRepository = new MongoBookingRepository();
+
+const paymentGateway = new MpesaPaymentGateway({
+  consumerKey: process.env.MPESA_CONSUMER_KEY,
+  consumerSecret: process.env.MPESA_CONSUMER_SECRET,
+  businessShortCode: process.env.MPESA_BUSINESS_SHORT_CODE,
+  passkey: process.env.MPESA_PASSKEY,
+  callbackUrl: process.env.MPESA_CALLBACK_URL,
+});
 
 const signupUser = new SignupUser(userRepository, passwordService);
 const signinUser = new SiginInUser({
@@ -45,6 +60,12 @@ const updateExistingProperty = new UpdatePropertyUseCase(
 );
 const getProperty = new GetPropertyUseCase(propertyRepository);
 const deleteProperty = new DeletePropertyUseCase(propertyRepository);
+const initiateBookingPayment = new InitiateBookingPaymentUseCase(
+  propertyRepository,
+  paymentRepository,
+  bookingRepository,
+  paymentGateway,
+);
 
 const signupController = new SignupController(signupUser, logger);
 const signinController = new SigninController(signinUser, logger);
@@ -61,6 +82,10 @@ const updatePropertyController = new UpdatePropertyController(
   updateExistingProperty,
   logger,
 );
+const initiateBookingController = new InitiateBookingPaymentController(
+  initiateBookingPayment,
+  logger,
+);
 
 export {
   signupController,
@@ -69,4 +94,5 @@ export {
   updatePropertyController,
   getPropertyController,
   deletePropertyController,
+  initiateBookingController,
 };

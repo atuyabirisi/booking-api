@@ -1,127 +1,142 @@
-class Booking {
-  static BOOKING_STATES = {
-    CONFIRMED: "confirmed",
-    CANCELLED: "cancelled",
-    CHECKED_OUT: "checked_out",
-  };
+const booking_status = Object.freeze({
+  confirmed: "confirmed",
+  completed: "completed",
+  cancelled: "cancelled",
+});
 
+class Booking {
   constructor({
     bookingReference,
     propertyNumber,
     guestName,
+    guestEmail,
     guestPhone,
     checkIn,
     checkOut,
+    guests,
     pricePerNight,
+    numberOfNights,
+    totalAmount,
     paymentReference,
-    status = Booking.booking_states.confirmed,
+    status = booking_status.confirmed,
+    createdAt = new Date(),
+    updatedAt = new Date(),
   }) {
     this.validateBookingReference(bookingReference);
-    this.validatePropertyNumber(propertyNumber);
-    this.validateGuestName(guestName);
-    this.validateGuestPhone(guestPhone);
-    this.validateDates(checkIn, checkOut);
+    this.validateText(propertyNumber, "propertyNumber");
+    this.validateText(guestName, "guestName");
+    this.validateEmail(guestEmail);
+    this.validateText(guestPhone, "guestPhone");
+
+    this.validateDate(checkIn, "checkIn");
+    this.validateDate(checkOut, "checkOut");
+    this.validateDateRange(checkIn, checkOut);
+
+    this.validatePositiveInteger(guests, "guests");
     this.validatePrice(pricePerNight);
-    this.validatePaymentReference(paymentReference);
+    this.validatePositiveInteger(numberOfNights, "numberOfNights");
+    this.validatePrice(totalAmount);
+
+    this.validateText(paymentReference, "paymentReference");
     this.validateStatus(status);
 
     this.bookingReference = bookingReference.trim();
     this.propertyNumber = propertyNumber.trim();
     this.guestName = guestName.trim();
+    this.guestEmail = guestEmail.trim().toLowerCase();
     this.guestPhone = guestPhone.trim();
-    this.checkIn = checkIn;
-    this.checkOut = checkOut;
+
+    this.checkIn = new Date(checkIn);
+    this.checkOut = new Date(checkOut);
+
+    this.guests = guests;
     this.pricePerNight = pricePerNight;
-    this.numberOfNights = this.calculateNumberOfNights(checkIn, checkOut);
-    this.totalAmount = this.calculateTotalAmount(
-      pricePerNight,
-      this.numberOfNights,
-    );
+    this.numberOfNights = numberOfNights;
+    this.totalAmount = totalAmount;
     this.paymentReference = paymentReference.trim();
+
     this.status = status;
+
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  touch() {
+    this.updatedAt = new Date();
+  }
+
+  confirm() {
+    if (this.status === booking_status.cancelled)
+      throw new Error("Cancelled booking cannot be confirmed");
+
+    this.status = booking_status.confirmed;
+    this.touch();
+  }
+
+  complete() {
+    if (this.status !== booking_status.confirmed)
+      throw new Error("Only a confirmed booking can be completed");
+
+    this.status = booking_status.completed;
+    this.touch();
+  }
+
+  cancel() {
+    if (this.status === booking_status.completed)
+      throw new Error("Completed booking cannot be cancelled");
+
+    this.status = booking_status.cancelled;
+    this.touch();
   }
 
   validateBookingReference(bookingReference) {
-    if (
-      !bookingReference ||
-      typeof bookingReference !== "string" ||
-      !bookingReference.trim()
-    ) {
+    if (typeof bookingReference !== "string" || !bookingReference.trim())
       throw new Error("Booking reference is required");
-    }
   }
 
-  validatePropertyNumber(propertyNumber) {
+  validateText(value, fieldName) {
+    if (typeof value !== "string" || !value.trim())
+      throw new Error(`${fieldName} is required`);
+  }
+
+  validateEmail(email) {
     if (
-      !propertyNumber ||
-      typeof propertyNumber !== "string" ||
-      !propertyNumber.trim()
+      typeof email !== "string" ||
+      !email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
     )
-      throw new Error("Property number is required");
+      throw new Error("Valid email is required");
   }
 
-  validateGuestName(guestName) {
-    if (!guestName || typeof guestName !== "string" || !guestName.trim())
-      throw new Error("Guest name is required");
+  validateDate(value, fieldName) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime()))
+      throw new Error(`${fieldName} must be a valid date`);
   }
 
-  validateGuestPhone(guestPhone) {
-    if (!guestPhone || typeof guestPhone !== "string" || !guestPhone.trim())
-      throw new Error("Guest phone is required");
-  }
-
-  validateDates(checkIn, checkOut) {
-    if (!checkIn || !checkOut)
-      throw new Error("Check-in and check-out dates are required");
-
+  validateDateRange(checkIn, checkOut) {
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
 
-    if (
-      Number.isNaN(checkInDate.getTime()) ||
-      Number.isNaN(checkOutDate.getTime())
-    )
-      throw new Error("Invalid booking dates");
-
     if (checkOutDate <= checkInDate)
-      throw new Error("Check-out date must be after check-in date");
+      throw new Error("Check-out must be after check-in");
   }
 
-  validatePrice(pricePerNight) {
-    if (
-      typeof pricePerNight !== "number" ||
-      !Number.isFinite(pricePerNight) ||
-      pricePerNight < 0
-    )
-      throw new Error("Price per night must be a non-negative number");
+  validatePositiveInteger(value, fieldName) {
+    if (!Number.isInteger(value) || value <= 0)
+      throw new Error(`${fieldName} must be a positive integer`);
   }
 
-  validatePaymentReference(paymentReference) {
-    if (
-      !paymentReference ||
-      typeof paymentReference !== "string" ||
-      !paymentReference.trim()
-    )
-      throw new Error("Payment reference is required");
+  validatePrice(value) {
+    if (!Number.isFinite(value) || value <= 0)
+      throw new Error("Amount must be greater than zero");
   }
 
   validateStatus(status) {
-    if (!Object.values(Booking.BOOKING_STATES).includes(status))
+    if (!Object.values(booking_status).includes(status))
       throw new Error(`Invalid booking status: ${status}`);
-  }
-
-  calculateNumberOfNights(checkIn, checkOut) {
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-
-    const millisecondsPerDay = 1000 * 60 * 60 * 24;
-
-    return (checkOutDate - checkInDate) / millisecondsPerDay;
-  }
-
-  calculateTotalAmount(pricePerNight, numberOfNights) {
-    return pricePerNight * numberOfNights;
   }
 }
 
-export default Booking;
+export { Booking, booking_status };
