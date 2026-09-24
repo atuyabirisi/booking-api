@@ -4,7 +4,9 @@ import CreatePropertyUsecase from "../../application/use-cases/property/CreatePr
 import UpdatePropertyUseCase from "../../application/use-cases/property/UpdatePropertyUseCase.js";
 import GetPropertyUseCase from "../../application/use-cases/property/GetPropertyUseCase.js";
 import DeletePropertyUseCase from "../../application/use-cases/property/DeletePropertyUseCase.js";
-import MongoUserRepository from "../db/repositories/MongoUserRepository.js";
+import InitiateBookingPaymentUseCase from "../../application/use-cases/booking/InitiateBookingPaymentUseCase.js";
+import HandleMpesaCallbackUseCase from "../../application/use-cases/booking/HandleMpesaCallbackUseCase.js";
+
 import SignupController from "../../interfaces/http/controllers/SignupController.js";
 import SigninController from "../../interfaces/http/controllers/SigninController.js";
 import CreatePropertyController from "../../interfaces/http/controllers/property/CreatePropertyController.js";
@@ -12,15 +14,18 @@ import UpdatePropertyController from "../../interfaces/http/controllers/property
 import GetPropertyController from "../../interfaces/http/controllers/property/GetPropertyController.js";
 import DeletePropertyController from "../../interfaces/http/controllers/property/DeletePropertyController.js";
 import InitiateBookingPaymentController from "../../interfaces/http/controllers/booking/InitiateBookingPaymentController.js";
+import MpesaCallbackController from "../../interfaces/http/controllers/booking/MpesaCallbackController.js";
+
 import JwtService from "../services/JwtService.js";
 import BcryptPasswordService from "../services/BcryptPasswordService.js";
 import WinstonLogger from "../services/WinstonLogger.js";
 import CloudinaryImageStorage from "../services/CloudinaryStorageService.js";
+import MpesaPaymentGateway from "../payments/MpesaPaymentGateway.js";
+
+import MongoUserRepository from "../db/repositories/MongoUserRepository.js";
 import MongoPropertyRepository from "../db/repositories/MongoPropertyRepository.js";
 import MongoPaymentRepository from "../db/repositories/MongoPaymentRepository.js";
 import MongoBookingRepository from "../db/repositories/MongoBookingRepository.js";
-import MpesaPaymentGateway from "../payments/MpesaPaymentGateway.js";
-import InitiateBookingPaymentUseCase from "../../application/use-cases/booking/InitiateBookingPaymentUseCase.js";
 
 const logger = new WinstonLogger();
 const passwordService = new BcryptPasswordService();
@@ -63,8 +68,12 @@ const deleteProperty = new DeletePropertyUseCase(propertyRepository);
 const initiateBookingPayment = new InitiateBookingPaymentUseCase(
   propertyRepository,
   paymentRepository,
-  bookingRepository,
   paymentGateway,
+);
+const handleMpesaCallback = new HandleMpesaCallbackUseCase(
+  paymentRepository,
+  bookingRepository,
+  logger,
 );
 
 const signupController = new SignupController(signupUser, logger);
@@ -86,6 +95,10 @@ const initiateBookingController = new InitiateBookingPaymentController(
   initiateBookingPayment,
   logger,
 );
+const handleMpesaCallbackController = new MpesaCallbackController(
+  handleMpesaCallback,
+  logger,
+);
 
 export {
   signupController,
@@ -95,4 +108,5 @@ export {
   getPropertyController,
   deletePropertyController,
   initiateBookingController,
+  handleMpesaCallbackController,
 };

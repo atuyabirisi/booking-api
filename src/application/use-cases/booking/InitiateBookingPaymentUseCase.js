@@ -1,14 +1,8 @@
 import Payment from "../../../domain/entities/Payment.js";
 
 class InitiateBookingPaymentUseCase {
-  constructor(
-    propertyRepository,
-    paymentRepository,
-    bookingRepository,
-    paymentGateway,
-  ) {
+  constructor(propertyRepository, paymentRepository, paymentGateway) {
     this.propertyRepository = propertyRepository;
-    this.bookingRepository = bookingRepository;
     this.paymentRepository = paymentRepository;
     this.paymentGateway = paymentGateway;
   }

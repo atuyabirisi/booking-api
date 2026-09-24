@@ -9,11 +9,9 @@ class Booking {
     bookingReference,
     propertyNumber,
     guestName,
-    guestEmail,
     guestPhone,
     checkIn,
     checkOut,
-    guests,
     pricePerNight,
     numberOfNights,
     totalAmount,
@@ -25,14 +23,12 @@ class Booking {
     this.validateBookingReference(bookingReference);
     this.validateText(propertyNumber, "propertyNumber");
     this.validateText(guestName, "guestName");
-    this.validateEmail(guestEmail);
     this.validateText(guestPhone, "guestPhone");
 
     this.validateDate(checkIn, "checkIn");
     this.validateDate(checkOut, "checkOut");
     this.validateDateRange(checkIn, checkOut);
 
-    this.validatePositiveInteger(guests, "guests");
     this.validatePrice(pricePerNight);
     this.validatePositiveInteger(numberOfNights, "numberOfNights");
     this.validatePrice(totalAmount);
@@ -43,13 +39,11 @@ class Booking {
     this.bookingReference = bookingReference.trim();
     this.propertyNumber = propertyNumber.trim();
     this.guestName = guestName.trim();
-    this.guestEmail = guestEmail.trim().toLowerCase();
     this.guestPhone = guestPhone.trim();
 
     this.checkIn = new Date(checkIn);
     this.checkOut = new Date(checkOut);
 
-    this.guests = guests;
     this.pricePerNight = pricePerNight;
     this.numberOfNights = numberOfNights;
     this.totalAmount = totalAmount;
@@ -97,15 +91,6 @@ class Booking {
   validateText(value, fieldName) {
     if (typeof value !== "string" || !value.trim())
       throw new Error(`${fieldName} is required`);
-  }
-
-  validateEmail(email) {
-    if (
-      typeof email !== "string" ||
-      !email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-    )
-      throw new Error("Valid email is required");
   }
 
   validateDate(value, fieldName) {

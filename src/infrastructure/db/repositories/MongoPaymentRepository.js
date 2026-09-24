@@ -12,12 +12,18 @@ class MongoPaymentRepository extends PaymentRepository {
     });
   }
 
+  async findByProviderCheckoutId(providerCheckoutId) {
+    return await PaymentModel.findOne({
+      providerCheckoutId,
+    });
+  }
+
   async updatePayment(paymentReference, dataToUpdate) {
     return await PaymentModel.findOneAndUpdate(
       { paymentReference },
       { $set: dataToUpdate },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );

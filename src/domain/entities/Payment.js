@@ -33,6 +33,17 @@ class Payment {
     this.validate();
   }
 
+  markAsPaid(providerTransactionId) {
+    if (this.status === "PAID") return;
+    this.status = "PAID";
+    this.providerTransactionId = providerTransactionId;
+  }
+
+  markAsFailed() {
+    if (this.status === "PAID") return;
+    this.status = "FAILED";
+  }
+
   validate() {
     if (!this.paymentReference)
       throw new Error("Payment reference is required");

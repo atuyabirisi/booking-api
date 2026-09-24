@@ -1,5 +1,5 @@
 class BookingRepository {
-  async saveBooking(booking) {
+  async createBooking(booking) {
     throw new Error("Method 'save()' must be implemented");
   }
 

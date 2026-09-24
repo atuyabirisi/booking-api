@@ -2,7 +2,7 @@ import BookingRepository from "../../../application/repositories/BookingReposito
 import BookingModel from "../../db/models/BookingModel.js";
 
 class MongoBookingRepository extends BookingRepository {
-  async save(booking) {
+  async createBooking(booking) {
     return await BookingModel.create(booking);
   }
 

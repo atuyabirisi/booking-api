@@ -21,13 +21,6 @@ const bookingSchema = new mongoose.Schema(
       trim: true,
     },
 
-    guestEmail: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-    },
-
     guestPhone: {
       type: String,
       required: true,
@@ -42,12 +35,6 @@ const bookingSchema = new mongoose.Schema(
     checkOut: {
       type: Date,
       required: true,
-    },
-
-    guests: {
-      type: Number,
-      required: true,
-      min: 1,
     },
 
     pricePerNight: {

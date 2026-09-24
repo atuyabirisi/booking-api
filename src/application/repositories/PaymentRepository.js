@@ -7,6 +7,10 @@ class PaymentRepository {
     throw new Error("Method 'findByPaymentReference()' must be implemented");
   }
 
+  async findByProviderCheckoutId(providerCheckoutId) {
+    throw new Error("Method 'findByProviderCheckoutId()' must be implemented");
+  }
+
   async updatePayment(paymentReference, dataToUpdate) {
     throw new Error("Method 'updatePayment()' must be implemented");
   }
