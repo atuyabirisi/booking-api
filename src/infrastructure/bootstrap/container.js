@@ -6,6 +6,7 @@ import GetPropertyUseCase from "../../application/use-cases/property/GetProperty
 import DeletePropertyUseCase from "../../application/use-cases/property/DeletePropertyUseCase.js";
 import InitiateBookingPaymentUseCase from "../../application/use-cases/booking/InitiateBookingPaymentUseCase.js";
 import HandleMpesaCallbackUseCase from "../../application/use-cases/booking/HandleMpesaCallbackUseCase.js";
+import ChatWithGuestUseCase from "../../application/use-cases/ai/ChatWithGuestUseCase.js";
 
 import SignupController from "../../interfaces/http/controllers/SignupController.js";
 import SigninController from "../../interfaces/http/controllers/SigninController.js";
@@ -15,12 +16,14 @@ import GetPropertyController from "../../interfaces/http/controllers/property/Ge
 import DeletePropertyController from "../../interfaces/http/controllers/property/DeletePropertyController.js";
 import InitiateBookingPaymentController from "../../interfaces/http/controllers/booking/InitiateBookingPaymentController.js";
 import MpesaCallbackController from "../../interfaces/http/controllers/booking/MpesaCallbackController.js";
+import ChatbotController from "../../interfaces/http/controllers/ai/ChatbotController.js";
 
 import JwtService from "../services/JwtService.js";
 import BcryptPasswordService from "../services/BcryptPasswordService.js";
 import WinstonLogger from "../services/WinstonLogger.js";
 import CloudinaryImageStorage from "../services/CloudinaryStorageService.js";
 import MpesaPaymentGateway from "../payments/MpesaPaymentGateway.js";
+import GeminiService from "../services/GeminiService.js";
 
 import MongoUserRepository from "../db/repositories/MongoUserRepository.js";
 import MongoPropertyRepository from "../db/repositories/MongoPropertyRepository.js";
@@ -30,6 +33,7 @@ import MongoBookingRepository from "../db/repositories/MongoBookingRepository.js
 const logger = new WinstonLogger();
 const passwordService = new BcryptPasswordService();
 const imageStorage = new CloudinaryImageStorage();
+const geminiService = new GeminiService();
 const tokenGenerator = new JwtService(
   process.env.JWT_SECRET,
   process.env.JWT_EXPIRES_IN,
@@ -75,7 +79,9 @@ const handleMpesaCallback = new HandleMpesaCallbackUseCase(
   bookingRepository,
   logger,
 );
+const chatWithGuestsUseCase = new ChatWithGuestUseCase(geminiService);
 
+const chatbotController = new ChatbotController(chatWithGuestsUseCase, logger);
 const signupController = new SignupController(signupUser, logger);
 const signinController = new SigninController(signinUser, logger);
 const getPropertyController = new GetPropertyController(getProperty, logger);
@@ -109,4 +115,5 @@ export {
   deletePropertyController,
   initiateBookingController,
   handleMpesaCallbackController,
+  chatbotController,
 };
