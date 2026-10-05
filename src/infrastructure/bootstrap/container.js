@@ -7,6 +7,7 @@ import DeletePropertyUseCase from "../../application/use-cases/property/DeletePr
 import InitiateBookingPaymentUseCase from "../../application/use-cases/booking/InitiateBookingPaymentUseCase.js";
 import HandleMpesaCallbackUseCase from "../../application/use-cases/booking/HandleMpesaCallbackUseCase.js";
 import ChatWithGuestUseCase from "../../application/use-cases/ai/ChatWithGuestUseCase.js";
+import PropertyAvailabilityUseCase from "../../application/use-cases/property/PropertyAvailabilityUseCase.js";
 
 import SignupController from "../../interfaces/http/controllers/SignupController.js";
 import SigninController from "../../interfaces/http/controllers/SigninController.js";
@@ -23,7 +24,7 @@ import BcryptPasswordService from "../services/BcryptPasswordService.js";
 import WinstonLogger from "../services/WinstonLogger.js";
 import CloudinaryImageStorage from "../services/CloudinaryStorageService.js";
 import MpesaPaymentGateway from "../payments/MpesaPaymentGateway.js";
-import GeminiService from "../services/GeminiService.js";
+import GeminiService from "../ai/providers/GeminiProvider.js";
 
 import MongoUserRepository from "../db/repositories/MongoUserRepository.js";
 import MongoPropertyRepository from "../db/repositories/MongoPropertyRepository.js";
@@ -79,7 +80,14 @@ const handleMpesaCallback = new HandleMpesaCallbackUseCase(
   bookingRepository,
   logger,
 );
-const chatWithGuestsUseCase = new ChatWithGuestUseCase(geminiService);
+const propertyAvailabilityUsecase = new PropertyAvailabilityUseCase(
+  propertyRepository,
+  bookingRepository,
+);
+const chatWithGuestsUseCase = new ChatWithGuestUseCase(
+  geminiService,
+  propertyAvailabilityUsecase,
+);
 
 const chatbotController = new ChatbotController(chatWithGuestsUseCase, logger);
 const signupController = new SignupController(signupUser, logger);

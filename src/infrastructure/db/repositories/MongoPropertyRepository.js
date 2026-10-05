@@ -21,6 +21,10 @@ class MongoPropertyRepository extends PropertyRepository {
     });
   }
 
+  async findAllProperties() {
+    return PropertyModel.find({});
+  }
+
   async findByPropertyNumber(propertyNumber) {
     return PropertyModel.findOne({
       propertyNumber,

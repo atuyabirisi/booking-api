@@ -18,6 +18,10 @@ class PropertyRepository {
   async isAvailable(propertyNumber) {
     throw new Error("isAvailable() must be implemented");
   }
+
+  async findAllProperties() {
+    throw new Error("findAllProperties() must be implemented");
+  }
 }
 
 export default PropertyRepository;
